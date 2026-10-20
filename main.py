@@ -23,6 +23,15 @@ response = client.chat.completions.create(
     ]
 )
 
+# Print number of tokens used by model
+
+if response.usage == None:
+    raise RuntimeError("API request failed")
+
+print(f"""
+Prompt tokens: {response.usage.prompt_tokens} 
+Response tokens: {response.usage.completion_tokens}""")
+
 print(response.choices[0].message.content)
 
 def main():
