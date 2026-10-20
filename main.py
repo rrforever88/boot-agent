@@ -1,6 +1,11 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+import argparse
+
+parser = argparse.ArgumentParser(description="Chatbot")
+parser.add_argument("user_prompt", type=str, help="User prompt")
+args = parser.parse_args()
 
 load_dotenv()
 api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -18,7 +23,7 @@ response = client.chat.completions.create(
     messages=[
         {
             "role": "user",
-            "content": "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum."
+            "content": args.user_prompt
         }
     ]
 )
@@ -29,10 +34,16 @@ if response.usage == None:
     raise RuntimeError("API request failed")
 
 print(f"""
+User prompt: {args.user_prompt}
+""")
+
+print(f"""
 Prompt tokens: {response.usage.prompt_tokens} 
 Response tokens: {response.usage.completion_tokens}""")
 
-print(response.choices[0].message.content)
+print(f"""
+Response:
+{response.choices[0].message.content}""")
 
 def main():
     print("Hello from boot-agent!")
