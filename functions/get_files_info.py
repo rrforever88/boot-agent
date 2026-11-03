@@ -17,6 +17,17 @@ def get_files_info(working_directory: str, directory: str = ".") -> str:
             return f'Error: "{directory}" is not a directory'
 
         if valid_target_dir == True:
-            return f'Success: "{directory}" is within the working directory'
+
+            string = ""
+
+            for i in os.listdir(target_dir):
+                name = i
+                file_size = os.path.getsize(os.path.normpath(os.path.join(target_dir, i)))
+                is_directory = os.path.isdir(os.path.normpath(os.path.join(target_dir, i)))
+                string = string + f"- {name}: file_size={file_size} bytes, is_dir={is_directory}\n"
+            
+            return string
+
+            # return f'Success: "{directory}" is within the working directory'
     except Exception as e:
         return f"Error: {e}"
