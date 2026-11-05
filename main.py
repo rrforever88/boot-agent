@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import argparse
 from prompts import system_prompt
+from call_function import available_functions
+import json
 
 parser = argparse.ArgumentParser(description="Chatbot")
 parser.add_argument("user_prompt", type=str, help="User prompt")
@@ -28,6 +30,7 @@ client = OpenAI(
 response = client.chat.completions.create(
     model="openrouter/free",
     messages=messages,
+    tools=available_functions,
 )
 
 # Print number of tokens used by model
@@ -44,9 +47,17 @@ if args.verbose == True:
     Prompt tokens: {response.usage.prompt_tokens} 
     Response tokens: {response.usage.completion_tokens}""")
 
-print(f"""
-Response:
-{response.choices[0].message.content}""")
+
+message = response.choices[0].message
+
+if message.tool_calls != None:
+    for tool_call in message.tool_calls:
+        function_args = json.loads(tool_call.function.arguments or "{}")
+        print(f"Calling function: {tool_call.function.name}({function_args})")
+else:
+    print(f"""
+    Response:
+    {response.choices[0].message.content}""")
 
 
 

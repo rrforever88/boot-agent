@@ -30,3 +30,19 @@ def get_file_content(working_directory: str, file_path: str) -> str:
 
     
     
+schema_get_file_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "Grab a file from a file path and return its contents. If content > 10,000 characters function will return the first 10,000 characters",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "File path to the target file, relative to the working directory (default is the working directory itself)",
+                },
+            },
+        },
+    },
+}
